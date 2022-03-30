@@ -1,9 +1,10 @@
-const express = require('express');
+import express from "express"
+import dotenv from "dotenv";
+import { signUp, createAccount } from "../controller/auth.js"
+import { RecaptchaV3 } from "express-recaptcha";
+import request from "request";
+
 const router = express.Router();
-const dotenv = require('dotenv')
-var Recaptcha = require('express-recaptcha').RecaptchaV3
-const account = require('../controller/account')
-const request = require('request');
 
 dotenv.config()
 
@@ -11,9 +12,9 @@ const siteKey = process.env.SITE_KEY
 const secretKey = process.env.SECRET_KEY
 
 var options = { hl: 'de' }
-var recaptcha = new Recaptcha(siteKey, secretKey, options)
+var recaptcha = new RecaptchaV3(siteKey, secretKey, options)
 
-verifyCaptcha = function(req, res, next){
+const verifyCaptcha = function(req, res, next){
     if(req.body === undefined || req.body === '' || req.body === null){
         return res.redirect('back');
     }
@@ -33,10 +34,10 @@ router.get('/', (req, res) => {
     res.render('index')
 });
 
-router.get('/signup/:referral', function (req, res, next) {
+router.get('/signup', function (req, res, next) {
     res.siteKey = siteKey
     next()
-}, account.signUp);
-router.post('/signup', recaptcha.middleware.verify = verifyCaptcha, account.createAccount);
+}, signUp);
+router.post('/signup', recaptcha.middleware.verify = verifyCaptcha, createAccount);
 
-module.exports = router;
+export default router;

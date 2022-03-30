@@ -1,15 +1,19 @@
-const express = require('express')
-const dotenv = require('dotenv')
-const https = require('https')
-const http = require('http')
-const fs = require('fs')
-const bodyParser = require('body-parser')
-const main = require('./routes/main');
+import express from "express"
+import dotenv from "dotenv"
+import https from "https"
+import http from "http"
+import fs from "fs"
+import bodyParser from "body-parser"
+import cors from "cors"
+import authRouter from "./routes/auth.js"
+
+const corsOptions = {
+    origin: "https://localhost:8080"
+};
 
 dotenv.config()
 
 const app = express()
-const router = express.Router()
 
 const portHttps = process.env.APP_PORT_HTTPS
 const portHttp = process.env.APP_PORT_HTTP
@@ -28,6 +32,8 @@ app.use((req, res, next) => {
     }
     next();
 });
+
+app.use(cors(corsOptions));
 app.set('view engine', 'pug')
 app.use(express.static('public'))
 app.set('layout extractStyles', true);
@@ -37,10 +43,10 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.disable('etag')
 app.disable('x-powered-by')
 
-app.use('/', main);
+app.use('/', authRouter);
 
 app.use((req, res, next) => {
-  res.status(404).render('errors/404')
+    res.status(404).render('error')
 })
 
 httpServer.listen(portHttp);

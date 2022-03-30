@@ -1,6 +1,5 @@
 include includes/header
 body(class="background show-spinner no-footer")
-    div(class="fixed-background")
     main
         div(class="container") 
             div(class="row h-100") 
@@ -39,10 +38,3 @@ body(class="background show-spinner no-footer")
                                 div(class="d-flex justify-content-end align-items-center") 
                                     button(class="btn btn-primary btn-lg btn-shadow" type="submit") REGISTER
     include includes/footer
-    script(src="https://www.google.com/recaptcha/api.js?render=6LeqoyQfAAAAADiHkt2nNb1rpSFCdb2rZB3jRtKW")
-    script.
-        grecaptcha.ready(function () {
-            grecaptcha.execute('#{siteKey}', { action: "/createsession" }).then(function (token) {
-                document.getElementById("captcha").value = token;
-            });
-        });
